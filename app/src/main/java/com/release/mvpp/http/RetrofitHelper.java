@@ -32,10 +32,12 @@ import io.reactivex.functions.Function;
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
 import retrofit2.Retrofit;
@@ -119,27 +121,29 @@ public class RetrofitHelper {
         @Override
         public Response intercept(Chain chain) throws IOException {
             final Request request = chain.request();
+           long startTime = System.currentTimeMillis();
+            Response response = chain.proceed(chain.request());
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            MediaType mediaType = response.body().contentType();
+            String content = response.body().string();
+
             Buffer requestBuffer = new Buffer();
-
-            if (request == null)
-                throw new RuntimeException("Request返回值不能为空");
-
             RequestBody requestBody = request.body();
 
             if (requestBody != null)
                 requestBody.writeTo(requestBuffer);
             else
-                Logger.d("request.body() == null");
+                Logger.d("headerIntercepteor--request.body() == null");
 
             //打印url信息
-            Logger.w(request.url() + (requestBody != null ? "?" + _parseParams(requestBody, requestBuffer) : ""));
-            final Response response = chain.proceed(request);
+            Logger.d("headerIntercepteor--" + request.url() + (requestBody != null ? "?" + _parseParams(requestBody, requestBuffer) : ""));
 
-            if (response == null) {
-                throw new RuntimeException("Response返回值不能为空");
-            }
+            Logger.d(content);
 
-            return response;
+            return response.newBuilder()
+                    .body(ResponseBody.create(mediaType, content))
+                    .build();
         }
     }
 

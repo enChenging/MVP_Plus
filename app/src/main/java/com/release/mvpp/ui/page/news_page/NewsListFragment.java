@@ -22,8 +22,7 @@ import com.release.mvpp.ui.adapter.item.NewsMultiItem;
 import com.release.mvpp.utils.NewsUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,11 +54,10 @@ public class NewsListFragment extends BaseMvpFragment<NewsListContract.View, New
     private List<NewsMultiItem> mAdData = new ArrayList<>();
     private List<String> bannerImagedList = new ArrayList<>();
     private List<String> bannerTitleList = new ArrayList<>();
-    private String mNewsId,mTitle;
-    private boolean isRefresh = true;
+    private String mNewsId, mTitle;
+    private boolean isFirst;
 
-
-    public static NewsListFragment newInstance(String newsId,String title) {
+    public static NewsListFragment newInstance(String newsId, String title) {
         NewsListFragment fragment = new NewsListFragment();
         Bundle bundle = new Bundle();
         bundle.putString(NEWS_TYPE_KEY, newsId);
@@ -87,7 +85,7 @@ public class NewsListFragment extends BaseMvpFragment<NewsListContract.View, New
         rvNewsList.setHasFixedSize(true);//让RecyclerView避免重新计算大小
         rvNewsList.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mAdapter = new NewsListAdapter(null,mTitle);
+        mAdapter = new NewsListAdapter(null, mTitle);
         mAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.SlideInLeft);
         rvNewsList.setAdapter(mAdapter);
 
@@ -97,7 +95,7 @@ public class NewsListFragment extends BaseMvpFragment<NewsListContract.View, New
 
     @Override
     public void startNet() {
-        mPresenter.requestData(mNewsId, 0,false);
+        mPresenter.requestData(mNewsId, 0, false, true);
     }
 
     private void initBanner() {
@@ -126,9 +124,9 @@ public class NewsListFragment extends BaseMvpFragment<NewsListContract.View, New
             switch (item.getItemType()) {
                 case NewsMultiItem.ITEM_TYPE_NORMAL:
                     if (NewsUtils.isNewsSpecial(itemNewsBean.getSkipType()))
-                        NewsSpecialActivity.start(mContext, itemNewsBean.getSpecialID(),itemNewsBean.getTitle());
+                        NewsSpecialActivity.start(mContext, itemNewsBean.getSpecialID(), itemNewsBean.getTitle());
                     else
-                        NewsDetailActivity.start(mContext, itemNewsBean.getPostid(),itemNewsBean.getTitle());
+                        NewsDetailActivity.start(mContext, itemNewsBean.getPostid(), itemNewsBean.getTitle());
                     break;
                 case NewsMultiItem.ITEM_TYPE_PHOTO_SET:
                     PhotoAlbumActivity.start(mContext, itemNewsBean.getPhotosetID());
@@ -140,25 +138,21 @@ public class NewsListFragment extends BaseMvpFragment<NewsListContract.View, New
 
     @Override
     public void initListener() {
-        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+        mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                refreshLayout.finishLoadMore(1000);
+                int page = mAdapter.getData().size() / PAGE;
+                mPresenter.requestData(mNewsId, page, false, false);
+            }
+
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                isRefresh = true;
-                mAdapter.getLoadMoreModule().setEnableLoadMore(false);
-                mPresenter.requestData(mNewsId, 0,true);
-                mRefreshLayout.finishRefresh(1000);
+                refreshLayout.finishRefresh(1000);
+                mPresenter.requestData(mNewsId, 0, true, false);
             }
         });
 
-        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                isRefresh = false;
-                int page = mAdapter.getData().size() / PAGE;
-                mPresenter.requestData(mNewsId, page,false);
-                mRefreshLayout.finishLoadMore(1000);
-            }
-        });
     }
 
 
@@ -168,27 +162,29 @@ public class NewsListFragment extends BaseMvpFragment<NewsListContract.View, New
     }
 
     @Override
-    public void loadData(Object object) {
-
+    public void loadData(Object object, boolean isRefresh) {
         List<NewsMultiItem> newsMultiItems = (List<NewsMultiItem>) object;
-        if (isRefresh) {
+        if (isRefresh || !isFirst)
+            initBannerData(newsMultiItems);
+        isFirst = true;
+        if (isRefresh)
             mAdapter.setList(newsMultiItems);
-
-            if (mNewsId.equals(NEWS_TOP_TYPE_ID)) {
-                mAdData.clear();
-                bannerTitleList.clear();
-                bannerImagedList.clear();
-                for (int i = 10; i < 15; i++) {
-                    NewsInfoBean newsBean = newsMultiItems.get(i).getNewsBean();
-                    bannerTitleList.add(newsBean.getTitle());
-                    mAdData.add(newsMultiItems.get(i));
-                    bannerImagedList.add(newsBean.getImgsrc());
-                }
-                mBanner.setData(bannerImagedList, bannerTitleList);
-            }
-        } else {
-            mAdapter.getLoadMoreModule().loadMoreComplete();
+        else
             mAdapter.addData(newsMultiItems);
+    }
+
+    private void initBannerData(List<NewsMultiItem> newsMultiItems) {
+        if (mNewsId.equals(NEWS_TOP_TYPE_ID)) {
+            mAdData.clear();
+            bannerTitleList.clear();
+            bannerImagedList.clear();
+            for (int i = 10; i < 15; i++) {
+                NewsInfoBean newsBean = newsMultiItems.get(i).getNewsBean();
+                bannerTitleList.add(newsBean.getTitle());
+                mAdData.add(newsMultiItems.get(i));
+                bannerImagedList.add(newsBean.getImgsrc());
+            }
+            mBanner.setData(bannerImagedList, bannerTitleList);
         }
     }
 }

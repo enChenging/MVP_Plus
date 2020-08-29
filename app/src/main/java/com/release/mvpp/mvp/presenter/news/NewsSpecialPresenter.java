@@ -29,7 +29,7 @@ import io.reactivex.functions.Function;
 public class NewsSpecialPresenter extends BasePresenter<NewsSpecialContract.View> implements NewsSpecialContract.Presenter {
 
     @Override
-    public void requestData(String specialId) {
+    public void requestData(String specialId, boolean isShowLoading) {
         Flowable<List<SpecialItem>> flowable = RetrofitHelper
                 .getNewsSpecialAPI(specialId)
                 .flatMap(new Function<SpecialInfoBean, Publisher<SpecialItem>>() {
@@ -44,7 +44,7 @@ public class NewsSpecialPresenter extends BasePresenter<NewsSpecialContract.View
                 .toList()
                 .toFlowable();
 
-        HttpUtils.ext(flowable, mView, true);
+        HttpUtils.ext(flowable, mView, true,isShowLoading);
     }
 
 

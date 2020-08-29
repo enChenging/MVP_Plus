@@ -22,6 +22,6 @@ public interface NewsSpecialContract {
 
     interface Presenter extends IPresenter<View> {
 
-        void requestData(String specialId);
+        void requestData(String specialId, boolean isShowLoading);
     }
 }

@@ -118,7 +118,7 @@ public class NewsDetailActivity extends BaseMvpActivity<NewsDetailContract.View,
 
     @Override
     public void startNet() {
-        mPresenter.requestData(mNewsId);
+        mPresenter.requestData(mNewsId,true);
     }
 
     @Override
@@ -182,7 +182,7 @@ public class NewsDetailActivity extends BaseMvpActivity<NewsDetailContract.View,
 
 
     @Override
-    public void loadData(Object data) {
+    public void loadData(Object data, boolean isRefresh) {
         NewsDetailInfoBean newsDetailInfoBean = (NewsDetailInfoBean) data;
 
         mTvTitleContent.setText(newsDetailInfoBean.getTitle());
@@ -214,7 +214,7 @@ public class NewsDetailActivity extends BaseMvpActivity<NewsDetailContract.View,
                         public boolean urlClicked(String url) {
                             String newsId = NewsUtils.clipNewsIdFromUrl(url);
                             if (newsId != null) {
-                                mPresenter.requestData(newsId);
+                                mPresenter.requestData(newsId,true);
                             }
                             return true;
                         }

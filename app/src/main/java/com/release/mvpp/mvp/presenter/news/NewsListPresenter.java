@@ -27,8 +27,9 @@ public class NewsListPresenter extends BasePresenter<NewsListContract.View> impl
 
 
     @Override
-    public void requestData(String newsId, int page, boolean isRefresh) {
-        Logger.e("NewsListFragment", "loadData---mNewsId: " + newsId);
+    public void requestData(String newsId, int page, boolean isRefresh, boolean isShowLoading) {
+
+        Logger.i("NewsListPresenter--requestData---mNewsId: " + newsId);
 
         Flowable<List<NewsMultiItem>> flowable = RetrofitHelper
                 .getImportantNewAPI(newsId, page)
@@ -42,7 +43,7 @@ public class NewsListPresenter extends BasePresenter<NewsListContract.View> impl
                 })
                 .compose(observableTransformer);
 
-        HttpUtils.ext(flowable, mView, page == 0 && !isRefresh);
+        HttpUtils.ext(flowable, mView, page == 0 && isRefresh, isShowLoading);
 
     }
 

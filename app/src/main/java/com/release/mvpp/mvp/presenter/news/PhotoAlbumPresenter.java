@@ -20,9 +20,9 @@ public class PhotoAlbumPresenter extends BasePresenter<PhotoAlbumContract.View> 
 
     @SuppressLint("CheckResult")
     @Override
-    public void requestData(String photoSetId) {
+    public void requestData(String photoSetId, boolean isShowLoading) {
         Logger.i("loadData---mPhotoSetId: " + photoSetId);
         Flowable<PhotoSetInfoBean> flowable = RetrofitHelper.getPhotoAlbumAPI(photoSetId);
-        HttpUtils.ext(flowable,mView,true);
+        HttpUtils.ext(flowable,mView,true,isShowLoading);
     }
 }

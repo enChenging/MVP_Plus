@@ -15,6 +15,6 @@ public interface VideoListContract {
 
     interface Presenter extends IPresenter<View> {
 
-        void requestData(String videoId, int page, boolean isRefresh);
+        void requestData(String videoId, int page, boolean isRefresh, boolean isShowLoading);
     }
 }

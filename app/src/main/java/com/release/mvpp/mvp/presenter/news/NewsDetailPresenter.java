@@ -25,7 +25,7 @@ public class NewsDetailPresenter extends BasePresenter<NewsDetailContract.View> 
 
     @SuppressLint("CheckResult")
     @Override
-    public void requestData(String newsId) {
+    public void requestData(String newsId, boolean isShowLoading) {
         Logger.i("newsId: " + newsId);
         Flowable<NewsDetailInfoBean> flowable = RetrofitHelper
                 .getNewsDetailAPI(newsId)
@@ -37,7 +37,7 @@ public class NewsDetailPresenter extends BasePresenter<NewsDetailContract.View> 
                         _handleRichTextWithImg(newsDetailInfoBean);
                     }
                 });
-        HttpUtils.ext(flowable, mView, true);
+        HttpUtils.ext(flowable, mView, true,isShowLoading);
     }
 
     /**

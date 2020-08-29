@@ -24,7 +24,7 @@ import io.reactivex.functions.Consumer;
 public class HttpUtils {
 
     @SuppressLint("CheckResult")
-    public static <T> void ext(Flowable<T> flowable, IView<T> view, boolean isShowLoading) {
+    public static <T> void ext(Flowable<T> flowable, IView view, boolean isRefresh,boolean isShowLoading) {
 
         flowable.compose(RxUtil.rxSchedulerHelper())
                 .doOnSubscribe(new Consumer<Subscription>() {
@@ -37,8 +37,8 @@ public class HttpUtils {
                 .subscribeWith(new CommonSubscriber<T>() {
                     @Override
                     protected void _onNext(T bean) {
-                        Logger.d("_onNext: " + bean);
-                        view.loadData(bean);
+//                        Logger.d("_onNext: " + bean);
+                        view.loadData(bean,isRefresh);
                     }
 
                     @Override

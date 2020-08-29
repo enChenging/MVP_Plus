@@ -21,10 +21,6 @@ public class NewsPagePresenter extends BasePresenter<NewsPageContract.View> impl
     public void requestData() {
         NewsTypeInfoDao newsTypeInfoDao = App.getInstance().mDaoSession.getNewsTypeInfoDao();
         List<NewsTypeInfo> newsTypeInfos = newsTypeInfoDao.loadAll();
-
-        String s = JSON.toJSONString(newsTypeInfos);
-        Logger.i("loadData: " + newsTypeInfos.size());
-        Logger.i("s: " + s);
         mView.loadData(newsTypeInfos);
     }
 }

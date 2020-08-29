@@ -15,8 +15,7 @@ import com.release.mvpp.mvp.presenter.VideoListPrsenter;
 import com.release.mvpp.ui.adapter.VideoListAdapter;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
 import java.util.List;
 
@@ -41,7 +40,6 @@ public class VideoListFragment extends BaseMvpFragment<VideoListContract.View, V
     SmartRefreshLayout mRefreshLayout;
 
     VideoListAdapter mAdapter;
-    private boolean isRefresh = true;
     public String mVideoId;
 
     public static VideoListFragment newInstance(String videoId) {
@@ -76,7 +74,7 @@ public class VideoListFragment extends BaseMvpFragment<VideoListContract.View, V
 
     @Override
     public void startNet() {
-        mPresenter.requestData(mVideoId, 0, false);
+        mPresenter.requestData(mVideoId, 0, false, true);
     }
 
     @Override
@@ -99,35 +97,28 @@ public class VideoListFragment extends BaseMvpFragment<VideoListContract.View, V
             }
         });
 
-        mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                isRefresh = true;
-                mAdapter.getLoadMoreModule().setEnableLoadMore(false);
-                mPresenter.requestData(mVideoId, 0, true);
-                mRefreshLayout.finishRefresh(1000);
-            }
-        });
-
-        mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+        mRefreshLayout.setOnRefreshLoadMoreListener(new OnRefreshLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
-                isRefresh = false;
-                int page = mAdapter.getData().size() / PAGE;
-                mPresenter.requestData(mVideoId, page, false);
                 mRefreshLayout.finishLoadMore(1000);
+                int page = mAdapter.getData().size() / PAGE;
+                mPresenter.requestData(mVideoId, page, false, false);
+            }
+
+            @Override
+            public void onRefresh(@NonNull RefreshLayout refreshLayout) {
+                mRefreshLayout.finishRefresh(1000);
+                mPresenter.requestData(mVideoId, 0, true, false);
             }
         });
-
     }
 
     @Override
-    public void loadData(Object data) {
+    public void loadData(Object data, boolean isRefresh) {
         List<VideoInfo> videoInfos = (List<VideoInfo>) data;
         if (isRefresh) {
             mAdapter.setNewData(videoInfos);
         } else {
-            mAdapter.getLoadMoreModule().loadMoreComplete();
             mAdapter.addData(videoInfos);
         }
     }

@@ -70,7 +70,7 @@ public abstract class BaseMvpActivity<V extends IView, P extends IPresenter<V>> 
     }
 
     @Override
-    public void loadData(Object data) {
+    public void loadData(Object data,boolean isRefresh) {
 
     }
 }

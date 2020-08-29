@@ -20,9 +20,9 @@ public class RecommendPagePresenter extends BasePresenter<RecommendPageContract.
 
     @SuppressLint("CheckResult")
     @Override
-    public void requestData(boolean isRefresh) {
+    public void requestData(boolean isRefresh, boolean isShowLoading) {
         Flowable<RecommendPageBean> flowable = RetrofitHelper.getRecommendData("4a0090627cf07a50def18da875165740", 20);
-        HttpUtils.ext(flowable, mView, !isRefresh);
+        HttpUtils.ext(flowable, mView, isRefresh,isShowLoading);
 
     }
 }

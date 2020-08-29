@@ -129,7 +129,6 @@ public class SplashActivity extends BaseMvpActivity<SplashContract.View, SplashC
     public void waitJump() {
         mBtnJump.setVisibility(View.VISIBLE);
         mBtnPermission.setVisibility(View.GONE);
-//        mPresenter.countdown(this, 6, mBtnJump);
     }
 
     @Override

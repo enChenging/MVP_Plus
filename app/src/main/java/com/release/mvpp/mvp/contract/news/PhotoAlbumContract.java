@@ -15,6 +15,6 @@ public interface PhotoAlbumContract {
 
     interface Presenter extends IPresenter<View> {
 
-        void requestData(String photoSetId);
+        void requestData(String photoSetId, boolean isShowLoading);
     }
 }

@@ -16,6 +16,6 @@ public interface RecommendPageContract {
 
     interface Presenter extends IPresenter<View> {
 
-        void requestData(boolean isRefresh);
+        void requestData(boolean isRefresh, boolean isShowLoading);
     }
 }

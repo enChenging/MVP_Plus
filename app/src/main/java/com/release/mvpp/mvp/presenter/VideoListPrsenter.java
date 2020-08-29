@@ -19,10 +19,10 @@ public class VideoListPrsenter extends BasePresenter<VideoListContract.View> imp
 
 
     @Override
-    public void requestData(String videoId, int page, boolean isRefresh) {
+    public void requestData(String videoId, int page, boolean isRefresh, boolean isShowLoading) {
 
         Flowable<List<VideoInfo>> flowable = RetrofitHelper.getVideoListAPI(videoId, page);
-        HttpUtils.ext(flowable, mView, page == 0 && !isRefresh);
+        HttpUtils.ext(flowable, mView, page == 0 && isRefresh, isShowLoading);
 
     }
 

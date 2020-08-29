@@ -5,12 +5,13 @@ package com.release.base.base;
  * @create 2019/4/1
  * @Describe
  */
-public interface IView<T> {
+public interface IView {
 
     /**
      * 加载数据
      */
-    void loadData(T data);
+    void loadData(Object data, boolean isRefresh);
+
     /**
      * 显示加载
      */

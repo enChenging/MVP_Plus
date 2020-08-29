@@ -66,12 +66,10 @@ public class RecommendPage extends BaseMvpFragment<RecommendPageContract.View, R
         mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-                mAdapter.getLoadMoreModule().setEnableLoadMore(false);
-                mPresenter.requestData(true);
                 mRefreshLayout.finishRefresh(1000);
+                mPresenter.requestData(true,false);
             }
         });
-
 
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -84,12 +82,12 @@ public class RecommendPage extends BaseMvpFragment<RecommendPageContract.View, R
 
     @Override
     public void startNet() {
-        mPresenter.requestData(false);
+        mPresenter.requestData(false,true);
     }
 
 
     @Override
-    public void loadData(Object data) {
+    public void loadData(Object data,boolean isRefresh) {
         RecommendPageBean bean = (RecommendPageBean) data;
         List<RecommendPageBean.NewslistBean> newslist = bean.getNewslist();
         mAdapter.setNewData(newslist);

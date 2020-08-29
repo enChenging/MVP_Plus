@@ -33,14 +33,12 @@ import butterknife.ButterKnife;
  * @create 2019/3/22
  * @Describe
  */
-public abstract class BaseActivity<T extends Presenter> extends AppCompatActivity implements
+public abstract class BaseActivity extends AppCompatActivity implements
         UiInterfaceAct {
 
     SwipeRefreshLayout mSwipeRefresh;
 
     protected static String TAG;
-
-    protected T mPresenter;
 
     protected NetworkChangeReceiver mNetworkChangeReceiver;
 

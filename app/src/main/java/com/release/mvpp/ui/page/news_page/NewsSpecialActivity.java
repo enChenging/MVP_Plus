@@ -65,8 +65,6 @@ public class NewsSpecialActivity extends BaseMvpActivity<NewsSpecialContract.Vie
     FloatingActionButton mFabCoping;
 
     private NewsSpecialAdapter mAdapter;
-//    private SectionQuickAdapter mAdapter;
-
     private final int[] mSkipId = new int[20];
     private TagLayout mTagLayout;
     private LinearLayoutManager mLinearLayoutManager;
@@ -113,7 +111,7 @@ public class NewsSpecialActivity extends BaseMvpActivity<NewsSpecialContract.Vie
 
     @Override
     public void startNet() {
-        mPresenter.requestData(mSpecialId);
+        mPresenter.requestData(mSpecialId,true);
     }
 
     @Override
@@ -147,7 +145,7 @@ public class NewsSpecialActivity extends BaseMvpActivity<NewsSpecialContract.Vie
     }
 
     @Override
-    public void loadData(Object data) {
+    public void loadData(Object data,boolean isRefresh) {
         mSpecialItems.clear();
         mSpecialItems.addAll((List<SpecialItem>) data);
         mAdapter.setList(mSpecialItems);

@@ -114,7 +114,7 @@ public abstract class BaseFragment extends Fragment implements UiInterfaceFrag, 
 
 
     @Override
-    public void loadData(Object data) {
+    public void loadData(Object data,boolean isRefresh) {
 
     }
 }

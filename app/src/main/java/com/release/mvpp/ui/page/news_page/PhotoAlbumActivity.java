@@ -91,11 +91,11 @@ public class PhotoAlbumActivity extends BaseMvpActivity<PhotoAlbumContract.View,
     @Override
     public void startNet() {
 
-        mPresenter.requestData(mPhotoSetId);
+        mPresenter.requestData(mPhotoSetId,true);
     }
 
     @Override
-    public void loadData(Object data) {
+    public void loadData(Object data, boolean isRefresh) {
         PhotoSetInfoBean photoSetBean = (PhotoSetInfoBean) data;
 
         String title = photoSetBean.getSetname();
