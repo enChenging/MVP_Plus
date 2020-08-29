@@ -1,20 +1,22 @@
 package com.release.mvpp.http;
 
+import android.webkit.WebSettings;
+
 import com.orhanobut.logger.Logger;
 import com.release.base.utils.CommonUtil;
 import com.release.base.utils.StringUtils;
 import com.release.base.utils.baserx.RxUtil;
 import com.release.mvpp.App;
 import com.release.mvpp.BuildConfig;
+import com.release.mvpp.dao.VideoInfo;
+import com.release.mvpp.http.api.BaseURL;
+import com.release.mvpp.http.api.NewsServiceApi;
+import com.release.mvpp.http.api.RecommendServiceApi;
 import com.release.mvpp.mvp.model.NewsDetailInfoBean;
 import com.release.mvpp.mvp.model.NewsInfoBean;
 import com.release.mvpp.mvp.model.PhotoSetInfoBean;
 import com.release.mvpp.mvp.model.RecommendPageBean;
 import com.release.mvpp.mvp.model.SpecialInfoBean;
-import com.release.mvpp.dao.VideoInfo;
-import com.release.mvpp.http.api.BaseURL;
-import com.release.mvpp.http.api.NewsServiceApi;
-import com.release.mvpp.http.api.RecommendServiceApi;
 
 import org.reactivestreams.Publisher;
 
@@ -37,7 +39,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import okio.Buffer;
 import retrofit2.Retrofit;
@@ -121,11 +122,10 @@ public class RetrofitHelper {
         @Override
         public Response intercept(Chain chain) throws IOException {
             final Request request = chain.request();
-           long startTime = System.currentTimeMillis();
+            long startTime = System.currentTimeMillis();
             Response response = chain.proceed(chain.request());
             long endTime = System.currentTimeMillis();
             long duration = endTime - startTime;
-            MediaType mediaType = response.body().contentType();
             String content = response.body().string();
 
             Buffer requestBuffer = new Buffer();
@@ -133,17 +133,16 @@ public class RetrofitHelper {
 
             if (requestBody != null)
                 requestBody.writeTo(requestBuffer);
-            else
-                Logger.d("headerIntercepteor--request.body() == null");
 
-            //打印url信息
-            Logger.d("headerIntercepteor--" + request.url() + (requestBody != null ? "?" + _parseParams(requestBody, requestBuffer) : ""));
+            Logger.d( request.url() + (requestBody != null ? "?" + _parseParams(requestBody, requestBuffer) : ""));
 
-            Logger.d(content);
+            Logger.d(duration + " 毫秒\n" + content);
 
-            return response.newBuilder()
-                    .body(ResponseBody.create(mediaType, content))
+            request.newBuilder()
+                    .removeHeader("User-Agent") //移除旧的
+                    .addHeader("User-Agent", WebSettings.getDefaultUserAgent(App.getInstance())) //添加真正的头部
                     .build();
+            return chain.proceed(request);
         }
     }
 

@@ -17,11 +17,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
-            android:drawableTop="@mipmap/img_tips_error_load_error"
+            android:drawableTop="@mipmap/ic_empty"
             android:drawablePadding="10dp"
             android:gravity="center"
-            android:text="网络异常，点击重试"
-            android:textColor="@color/theme_color"
+            android:text="暂无数据"
+            android:textColor="@color/font_normal"
             android:textSize="16sp" />
     </FrameLayout>
 
