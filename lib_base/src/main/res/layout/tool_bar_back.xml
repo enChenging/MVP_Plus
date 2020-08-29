@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/toolBar"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/default_toolbar_height"
+    android:background="@color/theme_color">
+
+    <RelativeLayout
+        android:id="@+id/toolBar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_toolbar_height"
+        app:contentInsetLeft="0dp"
+        app:contentInsetStart="0dp">
+
+        <ImageView
+            android:id="@+id/iv_back"
+            android:layout_width="@dimen/default_toolbar_height"
+            android:layout_height="@dimen/default_toolbar_height"
+            android:src="@mipmap/toolbar_back_white" />
+
+        <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="20dp"
+            android:text="关闭"
+            android:textColor="@color/White"
+            android:textSize="@dimen/default_small_text_size"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="marquee"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:singleLine="true"
+            android:layout_toEndOf="@id/iv_back"
+            android:layout_toStartOf="@+id/tv_right"
+            android:textColor="@color/White"
+            android:textSize="@dimen/tool_bar_test_view_size" />
+    </RelativeLayout>
+
+</RelativeLayout>

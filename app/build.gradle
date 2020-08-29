@@ -1,0 +1,122 @@
+apply plugin: 'com.android.application'
+apply plugin: 'androidx.navigation.safeargs'
+apply plugin: 'org.greenrobot.greendao'
+
+android {
+
+    compileSdkVersion rootProject.ext.android["compileSdkVersion"]
+    buildToolsVersion rootProject.ext.android["buildToolsVersion"]
+
+    defaultConfig {
+        applicationId rootProject.ext.android["applicationId"]
+        minSdkVersion rootProject.ext.android["minSdkVersion"]
+        targetSdkVersion rootProject.ext.android["targetSdkVersion"]
+        versionCode rootProject.ext.android["versionCode"]
+        versionName rootProject.ext.android["versionName"]
+
+        //版本名后面添加一句话，意思就是flavor dimension 它的维度就是该版本号，这样维度就是都是统一的了
+        flavorDimensions "versionCode"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+                includeCompileClasspath true
+            }
+        }
+
+
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        debug {
+            keyAlias 'android'
+            keyPassword 'android'
+            storeFile file('mr_release.jks')
+            storePassword 'android'
+        }
+        release {
+            keyAlias 'android'
+            keyPassword 'android'
+            storeFile file('mr_release.jks')
+            storePassword 'android'
+        }
+    }
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.release
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false //不在error情况下中断
+        disable 'MissingTranslation' //无视字符串缺少本地化的情况
+        disable 'ExtraTranslation'//无视多做了本地化的字符串
+    }
+
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries = false
+    }
+
+    productFlavors {
+        mvp {
+            applicationId "com.release.mvp"
+            resValue "string", "name", "mvp"
+            manifestPlaceholders = [app_icon     : "@mipmap/ic_launcher2",
+                                    app_roundicon: "@mipmap/ic_launcher2"]
+        }
+//        mvp2 {
+//            applicationId "com.release.mvp2"
+//            resValue "string", "name", "mvp2"
+//            manifestPlaceholders = [app_icon     : "@mipmap/ic_launcher",
+//                                    app_roundicon: "@mipmap/ic_launcher_round"]
+//        }
+    }
+
+
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "${productFlavors[0].name}_v${defaultConfig.versionName}_${buildType.name}_${releaseTime()}.apk"
+            }
+    }
+
+}
+
+static def releaseTime() {
+    return new Date().format("yyMMdd", TimeZone.getTimeZone("UTC"))
+}
+
+greendao {
+    schemaVersion 1 //数据库版本号
+//            targetGenDir 'src/main/java'//设置DaoMaster、DaoSession、Dao目录
+//            generateTests false //设置为true以自动生成单元测试。
+//            targetGenDirTests 'src/main/java' //应存储生成的单元测试的基本目录。默认为 src / androidTest / java。
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation project(':lib_base')
+    annotationProcessor rootProject.ext.dependencies["butterKnife-compiler"]
+
+    //leakcanary
+//    debugImplementation rootProject.ext.dependencies["leakcanary-android"]
+//    releaseImplementation rootProject.ext.dependencies["leakcanary-android-no-op"]
+//    debugImplementation rootProject.ext.dependencies["leakcanary-support-fragment"]
+}

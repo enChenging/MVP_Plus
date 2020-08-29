@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/splash"
+    tools:context=".ui.splash.SplashActivity">
+
+    <Button
+        android:id="@+id/btn_jump"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/bg_welcome_jump"
+        android:gravity="center"
+        android:text="跳过"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/default_small_text_size"
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/btn_permission"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_welcome_jump"
+        android:gravity="center"
+        android:text="温馨提示：点击开启应用所需要的权限"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone" />
+
+    <yanzhikai.textpath.SyncTextPathView
+        android:id="@+id/stpv_wa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:duration="5000"
+        app:paintStrokeColor="@android:color/white"
+        app:pathStrokeColor="@android:color/white"
+        app:showPainter="true"
+        app:text="@string/app_name"
+        app:textInCenter="true"
+        app:textSize="40sp" />
+
+    <yanzhikai.textpath.SyncTextPathView
+        android:id="@+id/stpv_cbh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/stpv_wa"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:duration="5000"
+        app:paintStrokeColor="@color/colorPrimary"
+        app:pathStrokeColor="@color/colorPrimary"
+        app:showPainter="true"
+        app:showPainterActually="true"
+        app:text="Created by Mr.release"
+        app:textInCenter="true"
+        app:textSize="32sp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
