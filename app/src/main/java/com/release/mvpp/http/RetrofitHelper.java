@@ -79,10 +79,10 @@ public class RetrofitHelper {
                     }
                     Cache cache = new Cache(new File(App.getInstance().getCacheDir(), "HttpCache"), 1024 * 1024 * 10);
                     builder = new OkHttpClient.Builder()
-                            .cache(cache)
+//                            .cache(cache)
                             .addInterceptor(interceptor)
                             .addInterceptor(new headerIntercepteor())
-                            .addNetworkInterceptor(new CacheInterceptor())
+//                            .addNetworkInterceptor(new CacheInterceptor())
                             .sslSocketFactory(sslParams.sSLSocketFactory, sslParams.trustManager)
                             .retryOnConnectionFailure(true)
                             .connectTimeout(30, TimeUnit.SECONDS)
