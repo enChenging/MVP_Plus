@@ -9,6 +9,7 @@ import com.orhanobut.logger.AndroidLogAdapter;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 import com.release.base.base.BaseApplication;
+import com.release.base.utils.CommonUtil;
 import com.release.base.utils.CrashHandler;
 import com.release.base.utils.SPUtil;
 import com.release.mvpp.dao.DaoMaster;
@@ -23,6 +24,7 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -47,6 +49,20 @@ public class App extends BaseApplication {
         initConfig();
         initLitePal();
         initLeakCanary();
+        initBugly();
+    }
+
+    private void initBugly() {
+        Context context = getApplicationContext();
+// 获取当前包名
+        String packageName = context.getPackageName();
+// 获取当前进程名
+        String processName = CommonUtil.getProcessName(android.os.Process.myPid());
+// 设置是否为上报进程
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
+        strategy.setUploadProcess(processName == null || processName.equals(packageName));
+// 初始化Bugly
+        CrashReport.initCrashReport(context, "71c4c6e997", BuildConfig.DEBUG, strategy);
     }
 
     static {
@@ -63,7 +79,7 @@ public class App extends BaseApplication {
         SmartRefreshLayout.setDefaultRefreshFooterCreator(new DefaultRefreshFooterCreator() {
             @Override
             public RefreshFooter createRefreshFooter(Context context, RefreshLayout layout) {
-                layout.setPrimaryColorsId(R.color.colorPrimary,android.R.color.white);
+                layout.setPrimaryColorsId(R.color.colorPrimary, android.R.color.white);
                 //指定为经典Footer，默认是 BallPulseFooter
                 //new ClassicsFooter(context).setDrawableSize(20);
                 return new BallPulseFooter(context).setSpinnerStyle(SpinnerStyle.Scale);
@@ -92,7 +108,7 @@ public class App extends BaseApplication {
 
     private void initConfig() {
         SPUtil.getInstance(this);
-        CrashHandler.getInstance().init(this);
+//        CrashHandler.getInstance().init(this);
 
         PrettyFormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
                 .showThreadInfo(false)  // 隐藏线程信息 默认：显示

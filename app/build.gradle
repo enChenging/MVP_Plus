@@ -23,7 +23,10 @@ android {
                 includeCompileClasspath true
             }
         }
-
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
 
         multiDexEnabled true
     }
@@ -119,4 +122,6 @@ dependencies {
 //    debugImplementation rootProject.ext.dependencies["leakcanary-android"]
 //    releaseImplementation rootProject.ext.dependencies["leakcanary-android-no-op"]
 //    debugImplementation rootProject.ext.dependencies["leakcanary-support-fragment"]
+    implementation 'com.tencent.bugly:crashreport_upgrade:1.4.5'
+    implementation 'com.tencent.bugly:nativecrashreport:3.7.471'
 }

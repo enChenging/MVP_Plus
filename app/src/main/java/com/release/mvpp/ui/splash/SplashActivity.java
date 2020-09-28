@@ -14,6 +14,7 @@ import com.release.mvpp.R;
 import com.release.mvpp.mvp.contract.SplashContract;
 import com.release.mvpp.mvp.presenter.SplashPresenter;
 import com.release.mvpp.ui.guide.GuideActivity;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import butterknife.BindView;
 import butterknife.OnClick;

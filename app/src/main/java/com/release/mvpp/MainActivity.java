@@ -22,6 +22,7 @@ import com.release.base.utils.StatusBarUtil;
 import com.release.base.widget.bottom_navigation.BottomNavigationViewEx;
 import com.release.mvpp.mvp.contract.MainContract;
 import com.release.mvpp.mvp.presenter.MainPersenter;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import butterknife.BindView;
 import cn.jzvd.Jzvd;
@@ -71,6 +72,7 @@ public class MainActivity extends BaseMvpActivity<MainContract.View, MainContrac
         NavigationUI.setupWithNavController(mBottomNavigation, navController);
 
         ImageLoader.loadCircleCrop(this, "https://b-ssl.duitang.com/uploads/item/201802/20/20180220170028_JcYMU.jpeg", mHeadImg, R.mipmap.ic_launcher2);
+
     }
 
     @Override
